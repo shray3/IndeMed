@@ -1,0 +1,112 @@
+body {
+    padding-top: 10px;
+    height:auto;
+    font-family: Garamond, Baskerville, 'Baskerville Old Face', 'Hoefler Text', 'Times New Roman', serif;
+}
+
+.login {
+	float:right;
+	padding-top:25px;
+	vertical-align:middle;
+}
+
+.starter-template {
+    padding: 5px 0px;
+    text-align: left;
+    font-family: Garamond, Baskerville, 'Baskerville Old Face', 'Hoefler Text', 'Times New Roman', serif;
+    font-size: x-large;
+    height:30%;
+}
+
+#nav1{
+	background-color: white;
+	font-size: large;
+	font-family: Garamond, Baskerville, 'Baskerville Old Face', 'Hoefler Text', 'Times New Roman', serif;
+	height:20%;
+	width:100%;
+	margin:0px;
+	padding:0px;
+	position:relative;
+	z-index: 3;
+	vertical-align:middle;
+}
+
+#nav2 {
+	background-color: black;
+	font-size: large;
+	font-family: Garamond, Baskerville, 'Baskerville Old Face', 'Hoefler Text', 'Times New Roman', serif;
+	height: 10%;
+	width:100%;
+	position:relative;
+	z-index:2;
+	vertical-align:middle;
+}
+
+#main {
+	height:100%;
+	position: relative;
+	z-index:1;
+	min-height:100%;
+	margin-left: 0 auto -100px;
+	margin-right: 0 auto -100px;
+}
+
+.col-md-4 {
+	width:33.3333%;
+	height:40%;
+	position: relative;
+	min-height: 1px; 
+	padding-right: 15px;
+	padding-left: 15px;
+	float:left;
+}
+
+.info {
+	font-size: small;
+}
+
+#footer {
+	padding: 10px 15px;
+	width:80%;
+	height:80px;
+	font-family: Garamond, Baskerville, 'Baskerville Old Face', 'Hoefler Text', 'Times New Roman', serif;
+	bottom:0;
+	float:center;
+}
+
+.log {
+	position:relative;
+	z-index:0;
+	width:100%;
+}
+
+#signup {
+	text-align:center;
+	width:100%;
+	float:center;
+	margin: 10px auto; 
+}
+
+.editbox {
+	max-height:300px;
+}
+
+table tr:hover {
+	background-color: #D3D3D3;
+}
+
+#myTable {
+	padding: 0px;
+}
+
+.pdash {
+	width: 40%;
+	position:relative;
+}
+
+
+
+
+
+
+

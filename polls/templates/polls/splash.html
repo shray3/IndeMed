@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>IndeMed Home Page</title>
+
+    <link href="{{ STATIC_URL }}dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="{{ STATIC_URL }}custom.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}dist/js/jquery-1.11.2.min.js"></script>
+  </head>
+  <body>
+  <div id="header"> </div>
+    <div class="container" id = 'main'>
+      <div class="starter-template">
+        <!-- Splash Page --> 
+        <h1> <em> Welcome to IndeMed! </em></h1>
+        <p class="lead"> IndeMed, short for Independent Medicine, is a provider-centric view for patient management. We allow you to focus on the care, while we take care of the rest. </p>
+      </div>
+
+    <div class="container">
+      <!-- Put each of the individual columns for the tools --> 
+      <div class="row">
+        <div class="col-md-4">
+          <!-- 3 individual columns that identify tools --> 
+          <h4>Manage your practice</h4>
+          <p class = 'info'> Utilize the tools by IndeMed to coordinate the various care-providers including physicians, nurse-practicioners, nurses and billing associates in order to efficiently manage your business. Output reports and keep track of sensitive information to ensure smooth operations. </p>
+        </div>
+        <div class="col-md-4">
+          <!-- Second column --> 
+          <h4>Manage your patients</h4>
+          <p class= 'info'> Keep track of patient data and visits by all members of your practice by using an integrated system for patient management. Keep track of notes, dictations, diagnoses, and demographic information in order to make sure all necessary information is recorded. </p>
+       </div>
+        <div class="col-md-4" >
+          <!-- Third column --> 
+          <h4>Manage your billing </h4>
+          <p class = 'info'>Output important billing information to proper authorities in order to receive payment. Keep track of business revenue and expenses received and recorded to date in order to analyze operations and conduct necessary requirements, such as paying taxes.</p>
+        </div>
+      </div>
+    </div>
+    <div class="container" log-in id='log'>
+      <form class="form-signin">
+        <!-- Account sign in --> 
+        <p class="form-signin-heading" class="text-cent" style="font-size:medium">If you have an account, please sign in here. Otherwise, sign up here.</p>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" style="width:50%; float:left;">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" style="width:50%; float:right;">
+        <p id = 'inval' style="color:red;"> Invalid username and password combination. Please try again. </p>
+        <br>
+        <br>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <div style="width:100%;position:absolute;vertical-align:middle;text-align:center;">
+          <button id = 'signin' class="btn btn-lg btn-primary btn-block" style="width:33%; float:center; position:absolute;" type="submit">Sign in</button>
+        </div>
+      </form>
+    </div>
+    </div>
+    <br>
+    <br>
+    <div id="footer" style:"height 80px; position:absolute;"> </div> 
+    </body>
+    <script>
+    $("#header").load('polls/templates/header.html');
+    $("#footer").load('polls/templates/footer.html');
+     jQuery(document).ready(function($) {
+          $('#inval').hide()
+          $('#signin').on( 'click', function (e) {
+              e.preventDefault();
+              checkLogin();
+            });
+
+
+    });
+    //function to check whether a log in is valid
+    function checkLogin(){
+        //Get the username and password from the page
+        var user = document.getElementById("inputEmail").value
+        var passw = document.getElementById("inputPassword").value 
+        
+        //post the request via ajax to the backend
+        $.ajax({
+                url : "check_login/", // the endpoint
+                type : "POST", // http methods
+                data : { 
+                    'csrfmiddlewaretoken': '{{csrf_token}}',
+                    user: user,
+                    passw: passw},
+                // handle a successful response
+                success : function(json) {
+                        if (json['log'] == 'valid') {
+                          location.href = 'manage';
+                        } else if (json['log'] == 'invalid') {
+                          document.getElementById("inputEmail").value= '';
+                          document.getElementById("inputPassword").value = '';
+                          $('#inval').show();
+                        }
+
+                        console.log(json); // log the returned json to the console
+                        console.log("success"); // another sanity check
+                },  
+
+                // handle a non-successful response
+                error : function(xhr,errmsg,err) {
+                        $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+            });
+    };
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

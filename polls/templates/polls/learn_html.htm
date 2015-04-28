@@ -1,0 +1,135 @@
+<!DOCTYPE html> 
+<html>
+<body lang="en-US">
+<head> Head contains meta data, which is not displayed. Title and meta are also elements that contain meta data. Style is a meta element that specifies internal CSS sheets and link is a meta element to define external style sheets. </head>
+
+<!-- This is a comment. They are not displayed in the browser. You can use comments in order to hide scripts from browsers without support for scripts. There are no tags  --> 
+
+
+<h1> My heading 1, most important </h1>
+<h2> My heading 2 </h2>
+<h3> My heading 3 </h3>
+<h4> My heading 4 </h4>
+<h5> My heading 5, least important </h5>
+
+<hr> 
+
+<p> The above was a horizontal line that separated the page in two. </p>
+
+<p> Doctype specifies the version of html used for the page. It must be the first thing in the html document before the html tag </p>	
+
+<p title="Here is a title"> The attributes are specified in the tags. This particular one has a title. </p>
+<p> My first paragraph. Browsers specify an empty line before and after a paragraph. </p>
+<p> My second paragaraph. You cannot be sure how pages will be displayed. Large and small screens will create weirdly sized pages, and adding extra spaces and lines will not have an effect --> they willy count as one space. </p>
+<p> You can create a pargraph with <br> line breaks <br> such as this one where line breaks are used to break horizontally between paragraphs</p>
+<p> The tag pre specifies fixed-width font that is already pre-formatted </p>
+
+<p> The <abbr title="World Health Organization">WHO</abbr> was founded in 1948.</p>
+
+<p> Each html element has a default style and can be altered with the style attribute. The way you do it is by doing 'style="property:value', so an example would be 'background-color:lightgrey' which would alter that specific elements background. One of these attributes is 'color:blue'. You can also alter the 'font-family:verdana' or alter the text size 'font-size:300%' or text-aligment 'text-align:center'</p>
+
+<p> you can also alter the types of text by doing any of the following: bold, important, italic, emphasized, marked, small, deleted, inserted, subscript, superscript. You can add bold or strong as well. Em adds emphasized text with added semantic importance. Yo ucn also add small formatting, marked formatting, deleted formatting, inserted formatting, subscript formatting, superscript formatting. You can use <q> to define quotation marks or 'blockquote' for long quotations. 'address' can be used for contact information or 'cite' to do an inline quotation.  </p>
+
+<p> <u> Computer Code: </u> Can use keyboard formatting for keyboard input, sample formatting for computer output 'samp'; 'code' defines programming code; 'var' defines a mathematical variable. </p>
+
+<p> <u> CSS = Cascading Style Sheets </u> Styling can be done in three different ways: 1) inline, using a style attribute in the HTML elements. 2) internal, using a style element in the HTML head section. 3) external using external CSS files. CSS has the syntax: 'element {property:value; property: value' . The element is the hTML element name. The property is a CSS property. The value is a CSS value. You separate stuff using semicolons. You can either define it in the html document by specifying it in the 'style' sectin of 'head', or you can specify in the 'head' of the document by writing 'link rel='stylesheet href=styles.css' with the tags. The typical syntax of CSS fonts are that you specify: 
+<br> 
+h1 { <br>
+color:blue;
+font-family: verdana;
+font-size:300%;
+} <br>
+</p>
+<p> The characteristics specified here include color, font-family, font-size. you can also specify a CSS Box model whereby you put a visible border around an HTML element. Padding puts space inside the border. Margin specifies space outside the border. In order to specify a format for a specific element, add an id attribute to the element: 'p id="p01" I am different' with tags. That way, you can add styling to one particular section. In order to define a style for a special type of elemetns, add a class attribute to the element, where you can add a specific color or something (for instance if there's an error). Use an id for a single element and class for a group of elements. </p>
+
+<p> <u> Hyperlink Syntax </u>: The href attribute specifies the destination address and the link text is the visisble part which sends you to the part you would like to go to. Some examples would be absolute URLs (with the http). A local link is specified via relative URL. You can use styles in order to change the colors, based on hovering or active links. Target specifies where to open the linked document. You can add links to images as well. HTML links can be used to create bookmarks inside HTML documents. 
+
+<p> <u> Image Stuff </u> For iamge size, you can specify the width and height of an mimage in pixels or you can do 'style="width:128px;height:128px'. If not specified, the browser expects to find the image in the same folder as the web page. But it is more common to find the image int he same folder as the web page. Or alternatively you can specify images on another server. You can also specify an image floating to the left or right of a paragraph by specifying the style: 'float:left'. 
+
+<p> <u> Tables: </u> Tables are defined via 'table' tag. In the table tag, you specify the style='width:100%'. Then you specify table rows and table columns via 'tr' and 'td'. A table row also has table headings with 'th' tag. You can put a border as well in the top of the style. If you want the borders to collapse into one border add 'CSS border-collapse'. You can also add cell padding which specifies the space between cell content and its borders. To do this, set the CSS padding property such as the following:
+<br>
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+} 
+<br>
+th, td {
+	padding: 15px;
+}
+<br>
+Table headings are defined via the 'th' tag and by default, most major browsers display the headings as bold and centered. You can left align using the CSS text-align property or also specify border-spacing for the table. A cell can span more than one column using the 'colspan' attribute. You can also add a caption via 'caption' tag. </p>
+<br>
+<p> <u> Lists </u>: There are unordered lists, ordered lists, and description lists. Unordered lists: each item starts with 'ul' and each item is 'li'. You can specify the style to be disc (bullets), circles (circles), square (squares), none (items are unmarked). 'Ol' specifies ordered lists and you can specify many types: numbers, uppercase letters, lowercase letters, roman numbers (uppercase and lower case). Can also do 'description lists' with description lists. You can also specify the lists via horizontally.
+
+<p> <u> Block Elements </u> Most elements are defined as either block level elements or inline elements. Block level are things such as headers, paragraphs lists, etc. Inline include stuff like bolding, table data, links, and images. Div is a block level element that can be used as a container for other HTML elements. Style and class are common and it has no required attributes. 'Span' can be used as an inline element that can be used as a container for text that has common style and class. It can be used to style parts of the text. </p>
+
+<p> <u> HTML Classes </u> Classing allows you to define CSS styles for classes of elements. You can specify a CSS style for a particular class of elements and then just reference that class whenever you want. You can class div elements in order to make them look the same. You can do the same to spans. </p>
+
+<p> <u> HTML Layouts </u> Websites have content in multiple columns and are layed out in a predictable rectangular fashion. You can specify each of the divs: (http://www.w3schools.com/html/html_layout.asp). The website uses four div elements to specify a header, nav bar, section, and footer. In HTML5, there are new semantic elements that define different parts of a web page (header, nav, section, article, aside, article, footer). You could use tables as well... but they weren't designed for that purpose. 
+<br> 
+<br>
+You need to create RWD (responsive web design) which can either be created by you, or you can use CSS Bootstrap. CSS Bootstrap is the best way to develop responsive web design. </p>
+
+<p> <u> iframe </u>: Used ino rder to display a web page within a web page. Use the iframe tag. </p>
+
+<p> <u> Color Names/Values in HTML </u> Colors are specified by name. You can use hex notation to specify the red, green, and blue components. </p>
+
+<p> <u> HTML scripts </u> The script tag is used to define a client-side script such as JavaScript. It poitns to an external file through the src attribute. This allows you to do image manipulation, form validation, and dynamic content changes. Here is an instance: 
+<br> 
+document.getElemetnByID("demo").innerHTML = "Hello World"; 
+<br> 
+With the tags for script, this changes the content of the html element with id = demo to have hello world. No script tag allows users that have disabled scripts and the content will only work if scripts are not supported. Javascript can change content, styles, attributes. </p>
+
+<p> <u> HTML header: </u> In HTML5, you can omit the header and body tag, but it isn't best. The title element defines the title of the document and specifies the title in the browser toolbar and when bookmarked. You also put the style element in order to specificy how HTML elements should render. Link rels specific external links to style sheets and other things. Meta eleemnt can also be used to define keywords for searching. The base element specifies the base URL and base target for all relative URLs in the page. </p>
+
+<p> <u> HTML Entities </u>: Characters must be replaced by entities, such as less than or equal to. Left Tag becomes &lt. You can use '&nbsp' in order to add break space that won't be truncated. </p>
+
+<p> <u> HTML Encoding: </u>: To display HTML correctly, a web browser must know the character set used in the page. THere are differences between them. </p>
+
+<p> <u> URL: Uniform Resource Locator: </u> scheme (http), host (www), domain (internet domain name), port (port number, default is 80), path (path at server), filename. URL encoding can send text over web pages and transmit them over the internet. </p>
+
+<p> <u> XHTML </u>: XHTML is a well-formed way of properly nesting elements in HTML. It is used for javascript and manipulating the DOM. </p>
+
+<p> <u> HTML Forms </u>: the form element specifies an HTML form. The basic types are text, radio, and submit. The basic input is the following: 
+<br> 
+<form>
+First name:<br>
+<input type="text" name="firstname">
+<br>
+Last name:<br>
+<input type="text" name="lastname">
+</form>
+<br> 
+You can also do radio buttons, and have a submit button which hands it over to a form-handler. The action attribute defines the action to be performed when the form is submitted. The method attribute can be things such as 'get' and 'post'. Get is good for short data which can be put in the page address. Post is better for updating data and including sensitive information. Use a legend element to define a caption for a fieldset element, which groups related data in a form. You need to specify a name for each. 
+</p>
+
+<p> <u> HTML Form Elements </u> Most important elements is 'input' and you can specify its type. You can also choose 'select' which defines a drop-down list. you use the 'option' tag in order to specify the various options. The textarea defines a multi-line input field (text area). You can also use the button element to define a clickable button. Three things were added in HTML5: keygen, datalist, output. 
+<br> 
+Input types can include text, password, submit, radio, checkbox, button, (and plenty more including color, date, datetime, datetime-local, email, month, number, range, search, tel, time, url, week). You can also make sure they are numbers and specify a range using the number type. </p>
+
+<p> <u> HTML input attributes </u> the value attribute specifies the initial value for an input field. readonly specifies that the input field is readonly. disabled specifies that the input field is disabled. size specifies the size in characters for the input field. Maxlength is the maximum allowed length for the input field. novalidate specifies that the form data should not be validated when submitted. (and there are plenty more...)
+<a href="www.google.com"> This is a link to google </a>
+<p> In a href situations, "a" is the link component and the "href" is the attribute. It defines a hyperlink which is used to link from one page to another. Attributes include download (specifies the target will be downloaded when a user clicks), href = the page that the link goes to, hreflang = the language of the linked document, rel = the relationship between the currentn document and the linked document, target specifies where to open the linked document, type = specifies the media type of the linked document. </p>
+<p> With a href situations, you can also use mailto: webmaster@example.com in order to send mail to another individual, instead of a link </p>
+
+<br> 
+
+<img src = "w3schools.jpg" alt="W3Schools.com" width="104" height="142">
+<p> This should be an image pointing to w3schools.jpg. The attributes are the width and the height which specify the size. The alt tag displays the alternative text to be displayed when an html element cannot be displayed.  </p>
+
+<p title='common attributes'> The common attributes that are used in HTML are the following: alt (specifies alternative text), disabled (specifies what happens should an input element be disabled>, href (specifies URL for a link), id (specifies unique id for an element), src (specifies URL / web address for an image), style (specifies an inline CSS style for an element), title (specifies extra info about the element, displayed as a tool tip), value (specifies the value for an input element) 
+<l> article - specifies independent, self-contained content </l>
+<l> aside - specifies content aside from the content it is placed in </l>
+<l> sound - specifies sound or audio stream </l>
+<l> b tag - bold tag specifies bold text </l>
+<l> base - specifies a default URL and a default target for all links of a page. put in the head of a document </l>
+
+
+
+
+</p>
+
+
+
+</body>
+</html>

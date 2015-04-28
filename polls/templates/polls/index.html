@@ -1,0 +1,9 @@
+{% if patients %}
+	<ul>
+     {% for p in patients %}
+                    <li><a>{{ p.person.first_name}} with  {{p.description}}</a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No patients are recorded.</p>
+            {% endif %}

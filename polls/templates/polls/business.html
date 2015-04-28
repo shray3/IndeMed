@@ -1,0 +1,71 @@
+<div class="container" style="overflow-y:scroll; max-height:500px;">
+	<div class="table-responsive" style="padding:0px;">
+	    <table class="table table-hover">
+	      <thead>
+	      	<h4 style="background-color:black; color: white; margin:0px; padding:0px;"> Revenue </h4>
+	        <tr>
+	          <th id = 'amount'>Amount</th>
+	          <th>Description</th>
+	          <th>Date</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	      	{% if revenue %}
+	      	    {% for r in revenue %} 
+	      	    <tr>
+	      	        <td>{{ r.amount}}</td>
+	      	        <td>{{ r.description }} </td>
+	      	        <td>{{ r.date}} </td>
+	      	    </tr>
+	      	    {% endfor %}
+	      	{% else %}
+	      	    <p>No Revenue recorded</p>
+	      	{% endif %}
+	      </tbody>
+	    </table>
+
+	   	<table id = 'expense' class="table table-hover" style="padding:0px; border-spacing: 0; border-collapse: collapse;">
+	      <thead>
+	      	<h4 style="background-color:black; color: white; margin:0px; padding:0px;"> Expenses</h4>
+	        <tr>
+	          <th>Amount</th>
+	          <th>Item </th>
+	          <th>Date</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+            {% if expenses %}
+	      	    {% for e in expenses %}
+	      	    <tr>
+	      	        <td>{{ e.amount}}</td>
+	      	        <td>{{ e.description }} </td>
+	      	        <td>{{ e.date}} </td>
+	      	    </tr>
+	      	    {% endfor %}
+	      	{% else %}
+	      	    <p>No expenses recorded</p>
+	      	{% endif %}
+	      </tbody>
+	    </table>
+
+	    <table class="table table-hover">
+	      <thead>
+	      	<h4 style="background-color:black; color: white; margin:0px; padding:0px;"> Summary</h4>
+	      </thead>
+	      <tbody>
+            <tr>
+            	<td align='left'>Total Revenue</td>
+                <td align='right'>{{rsum}}</td>
+            </tr>
+            <tr> 
+            	<td align='left'> Total Expenses </td>
+            	<td align='right'> {{esum}} </td>
+            </tr>
+            <tr> 
+            	<td align='left'> Profit </td>
+            	<td align='right'>{{profit}} </td>
+            </tr>
+	      </tbody>
+	    </table>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+from django.db import models
+
+# original boiler plate code
+class Poll(models.Model):
+    question = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+    def __unicode__(self):
+        return self.question
+
+class Choice(models.Model):
+    poll = models.ForeignKey(Poll)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField()
+
+    def __unicode__(self):
+        return self.choice_text
+
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+
+# Create your models here.
+class Person(models.Model):
+	first_name = models.CharField(max_length = 100)
+	last_name = models.CharField(max_length = 100)
+	address = models.CharField(max_length = 100)
+
+class Practice(models.Model):
+	name = models.CharField(max_length = 50)
+
+class Institution(models.Model):
+	name = models.CharField(max_length = 100)
+	address = models.CharField(max_length = 100)
+	interface = models.CharField(max_length = 100)
+	practice = models.ForeignKey(Practice)
+
+class Doctor(models.Model):
+	person = models.OneToOneField(Person)
+	practice = models.ForeignKey(Practice)
+	admin = models.BooleanField(default = False)
+
+class Nurse(models.Model):
+	person = models.OneToOneField(Person)
+	practice = models.ForeignKey(Practice)
+
+class LogIn(models.Model):
+	person = models.OneToOneField(Person)
+	email = models.EmailField(max_length = 50)
+	password = models.CharField(max_length = 50)
+	practice = models.ForeignKey(Practice)
+
+class Entry(models.Model): 
+	amount = models.DecimalField(decimal_places = 2, max_digits = 8)
+	description = models.CharField(max_length = 100)
+	date = models.DateField(blank = True)
+	classification = models.CharField(max_length = 20)
+	practice = models.ForeignKey(Practice)
+
+class DataRecords(models.Model):
+	labs = models.CharField(max_length = 100)
+	note = models.CharField(max_length = 100)
+	vitals_data = models.CharField(max_length = 100)
+	tests = models.CharField(max_length = 100)
+	dictations = models.CharField(max_length = 100) #*** probably a link to an uploaded database that holds all the information
+
+class Demographics(models.Model):
+	age = models.IntegerField()
+	race = models.CharField(max_length = 100)
+
+class Billing(models.Model):
+	insr_plan = models.CharField(max_length = 100)
+	insr_number = models.CharField(max_length = 100)
+	insr_provider = models.CharField(max_length = 100)
+
+class Notes(models.Model):
+	data_record = models.ForeignKey(DataRecords)
+	demography = models.ForeignKey(Demographics)
+
+class Patient(models.Model):
+	person = models.ForeignKey(Person)
+	dob = models.DateField()
+	phone = models.CharField(	max_length = 15)
+	Notes = models.CharField(max_length = 20)
+	description = models.CharField(max_length = 300)
+	status = models.CharField(max_length = 100)	
+	institution = models.ForeignKey(Institution) 
+	nurse = models.ForeignKey(Nurse)
+	practice = models.ForeignKey(Practice)
+	billing = models.ForeignKey(Billing)

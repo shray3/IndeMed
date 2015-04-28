@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="icon" href="../../favicon.ico">
+      <title>IndeMed Billing Page</title>
+      <link href="{{ STATIC_URL }}dist/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+      <link rel="stylesheet" type="text/css" href="https://www.datatables.net/release-datatables/extensions/TableTools/css/dataTables.tableTools.css">
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+      <link href="{{ STATIC_URL }}custom.css" rel="stylesheet">
+      <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" >
+      <script src="{{ STATIC_URL }}dist/js/jquery-1.11.2.min.js"></script>
+      <script src="http://www.invat-online.net/javascript/jquery-ui-1.9.2.custom.min.js"></script>
+      <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.js"> </script>
+      <script type ="text/javascript" charset="utf8" src="https://www.datatables.net/release-datatables/extensions/TableTools/js/dataTables.tableTools.js"></script>
+   </head>
+   <body>
+      <!-- Wrapper Class for overall div -->
+      <div id = "wrapper" width:"height:100%; padding-bottom:-80px;"> 
+      <div>
+         <!-- First Nav Bar --> 
+         <nav class="navbar navbar-inverse navbar-fixed-top" id = "nav1">
+            <div class="container">
+               <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  </button>
+                  <a href="#"><img src='{{STATIC_URL }}assets/indem.png' alt='medical image' height="60px" vertical-align='text-top'></a>
+               </div>
+               <div id="navbar" class="collapse navbar-collapse">
+                  <span style = "font-size:small;" class='login'> Welcome to IndeMed, {{log.first_name}} {{log.last_name}}</span>
+               </div>
+            </div>
+         </nav>
+         <!-- Second Nav Bar --> 
+         <nav class="navbar navbar-static-top bs-docs-nav" id = "nav2" role="banner">
+            <div class="container">
+               <nav class="collapse navbar-collapse bs-navbar-collapse">
+                  <ul class="nav navbar-nav">
+                     <li><a href="/manage">Home</a></li>
+                  </ul>
+                  <!-- Nav bar on header --> 
+                  <ul class="nav navbar-nav navbar-right">
+                     <li><a href = '/manage'>Patients</a></li>
+                     <li><a href = '/billing'>Practice</a></li>
+                     <li><a href = '/changeInfo'>Change Password</a></li>
+                     <li><a href='/logout'>Log Out </a> </li>
+                  </ul>
+               </nav>
+            </div>
+         </nav>
+      </div>
+      <!-- Business management div --> 
+      <div style="height:70%; position:relative; z-index:1;">
+         <!-- Nav Bar for Practice Finance Component and People Management --> 
+         <div class="col-sm-3 col-md-2 sidebar" style="width:10%">
+            <ul class="nav nav-sidebar">
+            <li class="active" id = 'FinanceDiv'><a href="#finance">Finances<span class="sr-only">(current)</span></a></li>
+            <li class="active" id = 'PeopleDiv'><a href="#people">People<span class="sr-only">(current)</span></a></li>
+            <div id = 'dropDown'>
+            <ul> 
+               <li><a href = "#doctorDiv">Doctors</a></li>
+               <li><a href = "#nurseDiv">Nurses</a> </li>
+               <li><a href = "#instDiv"> Institutions</a></li>
+            </ul>
+            </div>
+         </div>`
+         <!-- Nav Bar for practice business management or people management --> 
+         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="width:80%; margin-left:0%; margin-top:0%;">
+         <div id = 'finance'>
+            <!-- Business Entries --> 
+            <h4 class = "container" class = 'page-header' style="margin-top:0%; border-bottom:4px solid;">Business Entries</h4>
+            <div class="container">
+               <!-- Table div for business entries --> 
+               <div class="table-responsive" style="padding:0px;">
+               <table style="padding:0px; font-size:small" class="table table-condensed" class = "tbls" >
+                  <table id = 'businessTable' style="padding:0px; font-size:small" class="table table-condensed" class = "tbls">
+                     <thead>
+                        <tr>
+                           <th>Type </th>
+                           <th>Amount</th>
+                           <th>Description</th>
+                           <th>Date</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {% if revenue or expenses %}
+                        {% for r in revenue %} 
+                        <tr>
+                           <td>Revenue</td>
+                           <td>{{ r.amount}}</td>
+                           <td>{{ r.description }} </td>
+                           <td>{{ r.date}} </td>
+                        </tr>
+                        {% endfor %}
+                        {% for e in expenses %}
+                        <tr>
+                           <td>Expense</td>
+                           <td>{{ e.amount}}</td>
+                           <td>{{ e.description }} </td>
+                           <td>{{ e.date}} </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <p> No Entries Recorded </p>
+                        {% endif %}
+                     </tbody>
+                  </table>
+                  <br>
+                  <form class="form-inline" method="POST" style="float:left; width:100%; font-size:10px;">
+                     {% csrf_token %}
+                     <div id = 'busForm' style = "font-size:small; height:25px;">
+                        {% csrf_token %}
+                        <select name = 'type' id = "b_type">
+                           <option value="Revenue">Revenue</option>
+                           <option value="Expense">Expense</option>
+                        </select>
+                        <label class="sr-only" for="b_amt">Amount</label>
+                        <input type="number" class="form-control" style="height:30px;" id="b_amt" placeholder="Amount">
+                        <label class="sr-only" for="b_des">Description</label>
+                        <input type="text" class="form-control" id="b_des" style="height:30px;width:30%" maxlength="75" placeholder="Description">
+                        <label class="sr-only" for="b_date">Date</label>
+                        <input type="date" class="form-control" id="b_date" style="height:30px;" placeholder="Date">
+                        <input type="submit" value="Add Business Item" id ='addEntry' style="height:30px;" class="tiny button">
+                        <input type="submit" value="Delete" id ='deleteEntry' style="height:30px;" class="tiny button">
+                     </div>
+                  </form>
+               </div>
+            </div>
+            <br>
+            <!-- Summary Table --> 
+            <h4 class = "container" class = 'page-header' style="margin-top:0%; border-bottom:4px solid;">Summary</h4>
+            <div class="container">
+               <table style="padding:0px; font-size:small" class="table table-condensed" class = "tbls" >
+                  <thead>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>Total Revenue</td>
+                        <td>{{rsum}}</td>
+                     </tr>
+                     <tr>
+                        <td> Total Expenses </td>
+                        <td> {{esum}} </td>
+                     </tr>
+                     <tr>
+                        <td> Profit </td>
+                        <td>{{profit}} </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+
+
+         <div id ='people'>
+            <div class="container" style = 'font-size:small;'>
+               <!-- Practice Management Portion --> 
+               <h4 class = 'page-header' style="margin-top:0%; border-bottom:4px solid;">Practice Management</h4>
+               <div>
+                  <!-- Doctors --> 
+                  <div id = "doctorDiv" style = "position: relative; z-index:3;">
+                     <div>
+                        <h5> <u> Current List of Doctors </u> </h5>
+                        <table class = 'table table-hover'>
+                           <thead> 
+                              <tr> 
+                                 <td> Name </td>
+                                 <td> Address </td>
+                                 <td> Contract </td>
+                              </tr>
+                           </thead>
+                           <tbody>
+                             {% if doctors %}
+                                 {% for d in doctors %}
+                                 <tr>
+                                     <td>{{d.person.first_name}} {{d.person.last_name}}</td>
+                                     <td>{{d.person.address}}</td>
+                                     <td><a href="mailto:{{d.email}}" target = "_top">{{d.email}}</a></td>
+                                 </tr>
+                                 {% endfor %}
+                             {% else %}
+                                 <p>No doctors in practice</p>
+                             {% endif %}
+                           </tbody>
+                        </table>
+                     </div>
+                     <form id = 'addDoctor' style="margin: 0; padding: 0; font-size: 14px; height: 20px;">
+                        {% csrf_token %}
+                        {% if isDoc %}
+                        <input type="submit" value="Add Doctor" id ='docButton' class="tiny button" style = "height: 20px;">
+                        <div id = 'doctorForm' style = "font-size:small; height:12px;"> {% csrf_token %}
+                           <label class="sr-only" for="d_fn">First Name</label>
+                           <input style = "display:inline; width: 40%; height:20px;" type="text" class="form-control" style="height:20px;" id="d_fn" placeholder="First Name">
+                           <label class="sr-only" for="d_ln">Last Name</label>
+                           <input style = "display:inline; width: 40%; height:20px;" type="text" class="form-control"id="d_ln" placeholder="Last Name">
+                           <label class="sr-only" for="d_addr">Address</label>
+                           <input style = "display:inline; width: 40%; height:20px;" type="text" class="form-control" id="d_addr" style="height:20px;" placeholder="Address">
+                           <label class="sr-only" for="d_email">Email</label>
+                           <input  style = "display:inline; width: 40%; height:20px;" type="email" class="form-control" id="d_email" style="height:20px;" placeholder="Email">
+                           <input type="submit" value="Add Doctor" id ='addD' style="height:20px;" class="tiny button">
+                        </div>
+                        {% endif %}
+                     </form>
+                  </div>
+                  <br> 
+                  <br>
+                  <!-- Nurses --> 
+                  <div id = "nurseDiv" style = "position: relative; z-index:2;">
+                        <h5> <u> Current List of Nurses</u> </h5>
+                           <table class = 'table table-hover'>
+                              <thead> 
+                                 <tr> 
+                                    <td> Name </td>
+                                    <td> Address </td>
+                                    <td> Contract </td>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                {% if nurses %}
+                                    {% for n in nurses %}
+                                    <tr>
+                                        <td>{{n.person.first_name}} {{n.person.last_name}}</td>
+                                        <td>{{n.person.address}}</td>
+                                        <td><a href="mailto:{{n.email}}" target = "_top">{{n.email}}</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <p>No nurses in practice</p>
+                                {% endif %}
+                              </tbody>
+                        </table>
+                     </div>
+                     <form id = 'addNurse' style="display:inline;">
+                        {% csrf_token %}
+                        <br>
+                        {% if isDoc %}
+                        <input type="submit" value="Add Nurse" id = "nurseButton" class="tiny button" style = "height: 20px;">
+                        <div id = 'nurseForm' style = "font-size:small; height:12px;">
+                           <label class="sr-only" for="n_fn">First Name</label>
+                           <input type="text" class="form-control" style = "display:inline; width: 40%; height:20px;" id="n_fn" placeholder="First Name">
+                           <label class="sr-only" for="n_ln">Last Name</label>
+                           <input type="text" class="form-control" style = "display:inline; width: 40%; height:20px;" id="n_ln" placeholder="Last Name">
+                           <label class="sr-only" for="n_addr">Address</label>
+                           <input type="text" class="form-control" style = "display:inline; width: 40%; height:20px;" id="n_addr" placeholder="Address">
+                           <label class="sr-only" for="n_email">Email</label>
+                           <input type="email" class="form-control" id="n_email" style = "display:inline; width: 40%; height:20px;" placeholder="Email">
+                           <input type="submit" value="Add Nurse" style="height:20px;" id ='addN'  class="tiny button">
+                        </div>
+                        {% endif %}
+                     </form>
+                  </div>
+                  <br>
+                  <br>
+                  <!-- Institutions Div --> 
+                  <div id = "instDiv" style = "position: relative; z-index:1;">
+                  <h5> <u> Current List of Institutions</u> </h5>
+                  <table class = 'table table-hover'>
+                     <thead> 
+                        <tr> 
+                           <td> Institution Name </td>
+                           <td> Address </td>
+                           <td> Contact </td>
+                        </tr>
+                     </thead>
+                     <tbody>
+                       {% if institutions %}
+                           {% for i in institutions %}
+                           <tr>
+                               <td>{{i.name}}</td>
+                               <td>{{i.address}}</td>
+                               <td><a href="mailto:{{i.interface}}" target = "_top">{{i.interface}}</a></td>
+                               </p>
+                           </tr>
+                           {% endfor %}
+                       {% else %}
+                           <p>No institutions in practice</p>
+                       {% endif %}
+                     </tbody>
+                  </table>
+                  <form id = 'addInstitution' style = "display:inline;">
+                        {% csrf_token %}
+                        <br>
+                        {% if isDoc %}
+                        <input type="submit" value="Add Institution" id = "instButton" class="tiny button">
+                        <div id = 'instForm' style = "font-size:small; height:12px;">
+                           <label class="sr-only" for="i_name">Name</label>
+                           <input type="text" class="form-control" style = "display:inline; width: 30%; height:20px;" id="i_name" placeholder="Institution Name">
+                           <label class="sr-only" for="i_address">Institution Address</label>
+                           <input type="text" class="form-control" style = "display:inline; width: 30%; height:20px;"  id="i_address" placeholder="Institution Address">
+                           <label class="sr-only" for="i_interface">Contact email</label>
+                           <input type="text" class="form-control" style = "display:inline; width: 30%; height:20px;" id="i_interface" placeholder="Institution Email">
+                           <input type="submit" value="Add Institution" id ='addI'  class="tiny button">
+                        </div>
+                        {% endif %}
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+         <!-- Footer --> 
+      <div id="footer" style:"height 80px; position:relative; z-index:0;"> </div> 
+      </div>
+      </div>
+      <script>
+         $("#header").load('polls/templates/header.html');
+         $("#footer").load('polls/templates/footer.html');
+         	jQuery(document).ready(function($) {
+         
+         		//Load the table and hide the forms for adding unless the user clicks
+         		var table = $('#businessTable').DataTable({
+                 dom: 'T<"clear">lfrtip',
+                 tableTools: {
+                   "sSwfPath": "//cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf"
+                 }
+               });
+               //load the data when the table rows are clicked upon 
+               $('#businessTable tbody').on( 'click', 'tr', function () {
+                       if ( $(this).hasClass('selected') ) {
+                           $(this).removeClass('selected');
+                       }
+                       else {
+                           table.$('tr.selected').removeClass('selected');
+                           $(this).addClass('selected');
+                       }
+                   } );
+         		$('#doctorForm').hide()
+         		$('#nurseForm').hide()
+         		$('#instForm').hide()
+               $('#people').hide()
+               $('#dropDown').hide()
+         
+         		//doctor, nurse, and institution buttons
+         		$('#docButton').on( 'click', function (e) {
+         			e.preventDefault();
+                  $('#docButton').hide()
+         			$('#doctorForm').show()
+         		});
+         		$('#nurseButton').on( 'click', function (e) {
+         			e.preventDefault();
+                  $('#nurseButton').hide()
+         			$('#nurseForm').show()
+         		});
+         		$('#instButton').on( 'click', function (e) {
+         			e.preventDefault();
+                  $('#instButton').hide()
+         			$('#instForm').show()
+         		});
+               $("#FinanceDiv").on ('click', function(e) {
+                  e.preventDefault();
+                  $('#finance').show()
+                  $('#people').hide()
+                  $('#dropDown').hide()
+               });
+               $("#PeopleDiv").on ('click', function(e) {
+                  e.preventDefault();
+                  $('#people').show()
+                  $('#finance').hide()
+                  $('#dropDown').show()
+               });
+
+               $('#deleteEntry').click( function () {
+                   var a = table.row('.selected').data();
+                   type = a[0];
+                   amount = a[1];
+                   description = a[2];
+                   delete_entry(type, amount, description);
+                   table.row('.selected').remove().draw( false );
+               });
+
+               //make it so that the tabs work
+               $(function() {
+                   $( "#tabs" ).tabs();
+                 });
+         
+         		//add the respective individuals once clicked
+         		$( "#addD" ).click(function() {
+         		  	createEmployee('doctor');
+         		});
+         		$("#addN").click(function() {
+         			createEmployee('nurse');
+         		});
+         		$("#addI").click(function() {
+         			createInstitution();
+         		});
+         		$("#addEntry").click(function() {
+         			createEntry();
+         		});
+         	});
+         
+         //function to create a new employee: doctor or nurse
+         function createEmployee(employee){
+         	
+         	//Extract the relevant information based upon which button is clicked
+         	if (employee == 'doctor') {
+         		console.log('went into doctor field')
+         		var f_name = document.getElementById("d_fn").value
+         		var l_name = document.getElementById("d_ln").value 
+         		var addr = document.getElementById("d_addr").value
+         		var email = document.getElementById("d_email").value
+         	} else if (employee == 'nurse') {
+         		console.log('went into nurse field')
+         		var f_name = document.getElementById("n_fn").value
+         		var l_name = document.getElementById("n_ln").value 
+         		var addr = document.getElementById("n_addr").value
+         		var email = document.getElementById("n_email").value
+         	}
+         	//$( "#update" ).html("New "+employee+" with email "+email+" and password indemed123 created!. Please notify them and allow them to log-in with this information and log in to change the password." );
+         	//$('#update').show()
+         
+         	//ajax call to dynamically update the database
+         	$.ajax({
+         			url : "create_employee/", // the endpoint
+         			type : "POST", // http methods
+         			data : { 
+         				'csrfmiddlewaretoken': '{{csrf_token}}',
+         				emp: employee,
+         				first : f_name,
+         				last: l_name,
+         				address: addr,
+         				email: email},
+         			// handle a successful response
+         			success : function(json) {
+         					//**** fix this
+         					$('#post-text').text(''); // remove the value from the input
+         					console.log(json); // log the returned json to the console
+         					console.log("success"); // another sanity check
+         			},  
+         
+         			// handle a non-successful response
+         			error : function(xhr,errmsg,err) {
+         					$('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+         							" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+         					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+         			}
+         		});
+         };
+         
+         //function to create a new institution
+         function createInstitution(){
+         
+         	//extract the relevant information
+         	var name = document.getElementById("i_name").value
+         	var addr = document.getElementById("i_address").value 
+         	var inter = document.getElementById("i_interface").value
+         	
+         	//post the information using an ajax call
+         	$.ajax({
+         			url : "create_institution/", // the endpoint
+         			type : "POST", // http methods
+         			data : { 
+         				'csrfmiddlewaretoken': '{{csrf_token}}',
+         				name: name,
+         				address : addr,
+         				interf: inter},
+         			// handle a successful response
+         			success : function(json) {
+         					//**** fix this
+         					$('#post-text').text(''); // remove the value from the input
+         					console.log(json); // log the returned json to the console
+         					console.log("success"); // another sanity check
+         			},  
+         
+         			// handle a non-successful response
+         			error : function(xhr,errmsg,err) {
+         					$('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+         							" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+         					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+         			}
+         		});
+         };
+         
+         //function to add incremental business expenses and revenues
+         function createEntry(){
+         	//extract the relevant information from the table
+         	var type = document.getElementById("b_type").value
+         	var desc = document.getElementById("b_des").value 
+         	var date = document.getElementById("b_date").value 
+         	var amt = document.getElementById("b_amt").value
+         	
+         	//post the relevant information to the database
+         	$.ajax({
+         			url : "create_entry/", // the endpoint
+         			type : "POST", // http methods
+         			data : { 
+         				'csrfmiddlewaretoken': '{{csrf_token}}',
+         				type: type,
+         				desc : desc,
+         				date : date,
+         				amt: amt},
+         			// handle a successful response
+         			success : function(json) {
+         					//**** fix this
+         					$('#post-text').text(''); // remove the value from the input
+         					console.log(json); // log the returned json to the console
+         					console.log("success"); // another sanity check
+         			},  
+         
+         			// handle a non-successful response
+         			error : function(xhr,errmsg,err) {
+         					$('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+         							" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+         					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+         			}
+         		});
+         };
+
+         function delete_entry(type, amount, description){
+            //post the relevant information to the database
+            $.ajax({
+                  url : "delete_entry/", // the endpoint
+                  type : "POST", // http methods
+                  data : { 
+                     'csrfmiddlewaretoken': '{{csrf_token}}',
+                     type: type,
+                     amount : amount,
+                     description : description},
+                  // handle a successful response
+                  success : function(json) {
+                        //**** fix this
+                        $('#post-text').text(''); // remove the value from the input
+                        console.log(json); // log the returned json to the console
+                        console.log("success"); // another sanity check
+                  },  
+         
+                  // handle a non-successful response
+                  error : function(xhr,errmsg,err) {
+                        $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                              " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                  }
+               });
+         };
+         
+      </script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script src="{{ STATIC_URL }}dist/js/bootstrap.min.js"></script>
+   </body>
+</html>

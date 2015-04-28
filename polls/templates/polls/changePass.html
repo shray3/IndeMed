@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>IndeMed Change Password Page</title>
+
+    <link href="{{ STATIC_URL }}dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ STATIC_URL }}custom.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}dist/js/jquery-1.11.2.min.js"></script>
+  </head>
+  <body>
+  <!-- Header Nav Bar --> 
+  <div id="header"> 
+  <div>
+    <nav class="navbar navbar-inverse navbar-fixed-top" id = "nav1">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="#"><img src='{{STATIC_URL }}assets/indem.png' alt='medical image' height="60px" vertical-align='text-top'></a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+        <span style = "font-size:small;" class='login'> Welcome to IndeMed, {{log.first_name}} {{log.last_name}}</span>
+        </div>
+      </div>
+    </nav>
+
+    <nav class="navbar navbar-static-top bs-docs-nav" id = "nav2" role="banner">
+    <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/manage">Home</a></li>
+          </ul>
+      <!-- Nav bar header --> 
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href = '/manage'>Patients</a></li>
+        <li><a href = '/billing'>Practice</a></li>
+        <li><a href = '/changeInfo'>Change Password</a></li>
+        <li><a href='/logout'>Log Out </a> </li>
+      </ul>
+    </nav>
+    </div>
+    </nav>
+  </div>
+  </div>
+  <div class="container" log-in id='log'>
+        <form class="form-signin"> {% csrf_token %}
+
+          <!-- Prompting for old password and new password with confirmation --> 
+          <p class="form-signin-heading" class="text-cent" style="font-size:large; text-align:left">Please change your password here by inputting your old password for security and inputting your new desired password</p>
+
+          <label for="oldPass" class="sr-only">Input Old Password</label>
+          <input type="password" id="oldPass" class="form-control" placeholder="Old Password" required="" autofocus="" style="width:60%; float:left; position:relative; z-index: 2;" >
+
+          <label for="newPass1" class="sr-only">Input New Password</label>
+          <input type="password" id="newPass1" class="form-control" placeholder="New Password" required="" autofocus="" style="width:60%; float:left; position:relative; z-index: 1;">
+
+          <label for="newPass2" class="sr-only">Confirm Password</label>
+          <input type="password" id="newPass2" class="form-control" placeholder="Confirm New Password" required="" autofocus="" style="width:60%; float:left; position:relative; z-index: 0;">
+
+          <div style="width:60%; position:relative; z-index:0; text-align:center; float:center">
+            <button id = 'changePassword' class="btn btn-lg btn-primary btn-block" style="width:60%; float:center; position:relative;" type="submit">Change Password</button>
+
+            <!-- Error messages depending on what happens, either the passwords don't match or the original doesn't match --> 
+            <p id = 'success' style="color:green; float:left;"> You have successfully updated your password! </p>
+            <p id = 'error1' style="color:red; float:left;"> Error with changing your password. Please confirm that your new passwords match. </p>
+            <p id = 'error2' style="color:red; float:left;"> Error with changing your password. Please confirm that your old password matches your existing password. </p>
+          </div>
+        </form> 
+  </div>
+    <div id="footer"> </div>
+
+    <script>
+    $('#success').hide()
+    $('#error1').hide()
+    $('#error2').hide()
+
+        //button to change password
+        jQuery(document).ready(function($) {
+        $('#changePassword').on( 'click', function (e) {
+            e.preventDefault();
+          changePassword();
+          });
+
+    });
+
+    //function to change the password
+    function changePassword(){
+      console.log('entered change password section')
+      var oldPass = document.getElementById("oldPass").value
+      var newPass1 = document.getElementById("newPass1").value
+      var newPass2 = document.getElementById("newPass2").value
+
+      //ajax post to change password in the back end
+      $.ajax({
+              url : "change_password/", // the endpoint
+              type : "POST", // http methods
+              data : { 
+                  'csrfmiddlewaretoken': '{{csrf_token}}',
+                  oldpass: oldPass,
+                  newpass1: newPass1,
+                  newpass2: newPass2,
+                },
+              // handle a successful response
+              success : function(json) {
+                      //**** fix this
+                      if (json['change'] == 'valid') {
+                        document.getElementById("oldPass").value = ''
+                        document.getElementById("newPass1").value = ''
+                        document.getElementById("newPass2").value = ''
+                        $('#success').show();
+                        $('#error1').hide()
+                        $('#error2').hide()
+                      } else if (json['change'] == 'invalid1') {
+                        document.getElementById("oldPass").value = ''
+                        document.getElementById("newPass1").value = ''
+                        document.getElementById("newPass2").value = ''
+                        $('#error1').show();
+                        $('#success').hide()
+                        $('#error2').hide()
+                      } else if (json['change'] == 'invalid2') {
+                        document.getElementById("oldPass").value = ''
+                        document.getElementById("newPass1").value = ''
+                        document.getElementById("newPass2").value = ''
+                        $('#error2').show();
+                        $('#success').hide()
+                        $('#error1').hide()
+                      }
+
+              },  
+
+              // handle a non-successful response
+              error : function(xhr,errmsg,err) {
+                      $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                              " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                      console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+              }
+          });
+    };
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

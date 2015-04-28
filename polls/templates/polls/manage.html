@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="icon" href="../../favicon.ico">
+      <title>IndeMed Manage Page</title>
+      <link href="{{ STATIC_URL }}dist/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+      <link rel="stylesheet" type="text/css" href="https://www.datatables.net/release-datatables/extensions/TableTools/css/dataTables.tableTools.css">
+      <link href="{{ STATIC_URL }}custom.css" rel="stylesheet">
+      <script src="{{ STATIC_URL }}dist/js/jquery-1.11.2.min.js"></script>
+      <!-- DataTables CSS -->
+      <!-- jQuery -->
+      <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>   
+      <!-- DataTables -->
+      <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.js"></script>
+      <script type ="text/javascript" charset="utf8" src="https://www.datatables.net/release-datatables/extensions/TableTools/js/dataTables.tableTools.js"></script>
+   </head>
+   <body>
+      <div id = "wrapper" style="height:100%">
+         <div>
+            <!-- Create the top nav bar --> 
+            <nav class="navbar navbar-inverse navbar-fixed-top" id = "nav1">
+               <div class="container">
+                  <div class="navbar-header">
+                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                     <span class="sr-only">Toggle navigation</span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     </button>
+                     <a href="#"><img src='{{STATIC_URL }}assets/indem.png' alt='medical image' height="60px" vertical-align='text-top'></a>
+                  </div>
+                  <div id="navbar" class="collapse navbar-collapse">
+                     <!-- Header for page --> 
+                     <span style = "font-size:small;" class='login'> Welcome to IndeMed, {{log.first_name}} {{log.last_name}}</span>
+                  </div>
+               </div>
+            </nav>
+            <nav class="navbar navbar-static-top bs-docs-nav" id = "nav2" role="banner">
+               <div class="container">
+                  <nav class="collapse navbar-collapse bs-navbar-collapse">
+                     <ul class="nav navbar-nav">
+                        <li><a href="/manage">Home</a></li>
+                     </ul>
+                     <!-- Header bar for each of the navigation points of the application --> 
+                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href = '/manage'>Patients</a></li>
+                        <li><a href = '/billing'>Practice</a></li>
+                        <li><a href = '/changeInfo'>Change Password</a></li>
+                        <li><a href='/logout'>Log Out </a> </li>
+                     </ul>
+                  </nav>
+               </div>
+            </nav>
+         </div>
+         <div style="height:80%">
+            <div id="dashboard" style:"height:70%; overflow:scroll; position:relative; z-index:2;"> 
+         </div>
+         <div class="container-fluid" style="overflow-y:scroll;">
+            <div class="row">
+               <!-- Print the nav whereby you can automatically click and filter each of the individuals --> 
+               <div class="col-sm-3 col-md-2 sidebar" style="width:15%">
+                  <ul class="nav nav-sidebar">
+                     <li class="active" id = 'doctorNavAll'><a href="#">All Doctors<span class="sr-only">(current)</span></a></li>
+                     {% if doctors %}
+                     {% for d in doctors %}
+                     <li class = 'doctorNav'><a href="#">&nbsp; &nbsp;{{d.person.first_name}} {{d.person.last_name}}</a></li>
+                     {% endfor %}
+                     {% endif %}
+                     <li class="active" id = 'nurseNavAll'><a href="#">All Nurses<span class="sr-only">(current)</span></a></li>
+                     {% if nurses %}
+                     {% for n in nurses %}
+                     <li class = 'nurseNav'><a href="#">&nbsp; &nbsp;{{n.person.first_name}} {{n.person.last_name}}</a></li>
+                     {% endfor %}
+                     {% endif %}
+                     <li class="active" id = 'instNavAll'><a href="#">All Institutions<span class="sr-only">(current)</span></a></li>
+                     {% if institutions %}
+                     {% for i in institutions %}
+                     <li class = 'instNav'><a href="#">&nbsp; &nbsp;{{i.name}}</a></li>
+                     {% endfor %}
+                     {% endif %}
+                  </ul>
+               </div>
+               <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="width:80%; margin-left:0%; margin-top:0%;">
+                  <h4 class="page-header" style="margin-top:0%">Patient Management Dashboard</h4>
+                  <div class = "editbox" style="height:250px; width:100%; position: relative; z-index: 1;">
+                     <div style="width:65%; float:left">
+                        <div id = 'editableForm'>
+                           <!-- Dashboard to enter or update patients accordingly --> 
+                           Enter new patient or edit old patients here:
+                           <form class = "form-inline" method="POST" style="height:100%">
+                              {% csrf_token %}
+                              <div class="form-group" id="test" value = 'test2'>
+                                 <label class="sr-only" for="first_name">First Name</label>
+                                 <input type="text" class="form-control" id="first_name" placeholder="First Name" class = 'pdash'>
+                                 <label class="sr-only" for="last_name">Last Name</label>
+                                 <input type="text" class="form-control" id="last_name" placeholder="Last Name" class = 'pdash'>
+                                 <label class="sr-only" for="p_birth">Date of Birth</label>
+                                 <input type="date" class="form-control" id="p_birth" placeholder="Date of Birth" class = 'pdash'>
+                                 <label class="sr-only" for="p_tel">Phone Number</label>
+                                 <input type="tel" class="form-control" id="p_tel" placeholder="Telephone Number" class = 'pdash'>
+                              </div>
+                              <div class="form-group" width="100%">
+                                 <label class="sr-only" for="p_status">Status</label>
+                                 <select name = 'status' id = "p_status">
+                                    <option value="Urgent">Urgent</option>
+                                    <option value="Non-urgent">Non-Urgent</option>
+                                    <option value="Seen">Seen</option>
+                                    <option value="Pending Payment">Pending Payment</option>
+                                 </select>
+                                 <label class="sr-only" for="p_doc">Doctor</label>
+                                 <select name="p_doc" id="p_doc">
+                                    <!-- Drop down list for doctors --> 
+                                    {% if doctors %}
+                                    {% for d in doctors %}
+                                    <option value="{{d.person.first_name}} {{d.person.last_name}}">{{d.person.first_name}} {{d.person.last_name}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <option value="No Doctor">No Doctor </option>
+                                 </select>
+                                 <label class="sr-only" for="p_nurse">Nurse</label>
+                                 <select name="p_nurse" id="p_nurse">
+                                    <!-- Drop down list for nurses --> 
+                                    {% if nurses %}
+                                    {% for n in nurses %}
+                                    <option value="{{n.person.first_name}} {{n.person.last_name}}">{{n.person.first_name}} {{n.person.last_name}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <option value="No Nurse">No Nurse</option>
+                                 </select>
+                                 <label class="sr-only" for="p_inst">Institution</label>
+                                 <select name="p_inst" id="p_inst">
+                                    <!-- Drop down list for institutions --> 
+                                    {% if institutions %}
+                                    {% for i in institutions %}
+                                    <option value="{{i.name}}">{{i.name}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <option value="No Institution">No Institution </option>
+                                 </select>
+                              </div>
+                              <label class="sr-only" for="p_address">Address</label>
+                              <input type="text" class="form-control" id="p_address" placeholder="Address" class = 'pdash' style="width:80%">
+                              <br> 
+                              <label class="sr-only" for="p_des">Description</label>
+                              <textarea style = "margin-top:10px; width: 80%" rows = 3 class="form-control" id="p_des" placeholder="Enter description and diagnoses here..." class = 'pdash'> </textarea>
+                              <div id="results"></div>
+                              <!-- errors go here -->
+                              <input type="submit" value="Add or Edit Patients" class="tiny button" id = 'addPatient'>
+                              <button id='button'>Delete Patient</button>
+                              <button id='clearbutton'>Clear Form</button>
+                           </form>
+                        </div>
+                     </div>
+                     {% if isDoc %}
+                     <div id = 'billingForm' style="width:35%; float:right;">
+                        <!-- Billing Information dashboard. Only doctors and billing representatives should be able to access --> 
+                        Patient Billing Information:
+                        <label class="sr-only" for="insr_name">Insurance Name</label>
+                        <input type="text" class="form-control" id="insr_name" placeholder="Insurance Name" class = 'pdash'>
+                        <label class="sr-only" for="insr_num">Insurance Number</label>
+                        <input type="text" class="form-control" id="insr_num" placeholder="Insurance Number" class = 'pdash'>
+                        <label class="sr-only" for="insr_provider">Insurance Provider</label>
+                        <input type="text" class="form-control" id="insr_provider" placeholder="Insurance Provider" class = 'pdash'>
+                     </div>
+                     {% endif %}
+                  </div>
+                  <!--  Button to click and delete a patient --> 
+                  <!-- Use data table to access all information as pertains to each individual patient --> 
+                  <div class="table-responsive" style="padding:0px; position: relative; z-index: 0;">
+                     <table id = 'myTable' style="padding:0px; font-size:small" class="table table-condensed" class = "tbls" class = 'display'>
+                        <thead>
+                           <tr>
+                              <th>First Name</th>
+                              <th>Last Name </th>
+                              <th>Date of Birth</th>
+                              <th>Status</th>
+                              <th>Phone No.</th>
+                              <th>Doctor</th>
+                              <th>Nurse</th>
+                              <th>Institution</th>
+                              <th>Address</th>
+                              <th>Description</th>
+                              <th>Insurance Plan</th>
+                              <th>Insurance Number</th>
+                              <th>Insurance Provider</th>
+                           </tr>
+                        </thead>
+                        <tfoot>
+                           <tr>
+                              <th>First Name</th>
+                              <th>Last Name</th>
+                              <th>Date of Birth</th>
+                              <th>Status</th>
+                              <th>Phone No.</th>
+                              <th>Doctor</th>
+                              <th>Nurse</th>
+                              <th>Institution</th>
+                              <th>Address</th>
+                              <th>Description</th>
+                              <th>Insurance Plan</th>
+                              <th>Insurance Number</th>
+                              <th>Insurance Provider</th>
+                           </tr>
+                        </tfoot>
+                        <tbody>
+                           {% if patients %}
+                           {% for p in patients %}
+                           <td>{{ p.person.first_name}}</td>
+                           <td>{{ p.person.last_name }}</td>
+                           <td>{{ p.dob}}</td>
+                           <td>{{ p.status}}</td>
+                           <td>{{p.phone}}</td>
+                           <td>{{p.doctor.person.first_name}} {{p.doctor.person.last_name}}</td>
+                           <td>{{p.nurse.person.first_name}} {{p.nurse.person.last_name}}</td>
+                           <td>{{p.institution.name}}</td>
+                           <td>{{p.person.address}}</td>
+                           <td>{{p.description}}</td>
+                           <td>{{p.billing.insr_plan}}</td>
+                           <td>{{p.billing.insr_number}}</td>
+                           <td>{{p.billing.insr_provider}}</td>
+                           </tr>
+                           {% endfor %}
+                           {% else %}
+                           <p>No Patient Data Recorded</p>
+                           {% endif %}
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+            <div id="footer" style="height:80px; position:relative; z-index:0;"> </div>
+         </div>
+      </div>
+      </div>
+    </div>
+   </body>
+   <script>
+      //load the header and footer 
+        $("#header").load('polls/templates/header.html');
+        $("#footer").load('polls/templates/footer.html');
+        jQuery(document).ready(function($) {
+            //load the data table
+            var table = $('#myTable').DataTable({
+              dom: 'T<"clear">lfrtip',
+              tableTools: {
+                "sSwfPath": "//cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf"
+              }
+            });
+            //load the data when the table rows are clicked upon 
+            $('#myTable tbody').on( 'click', 'tr', function () {
+                    //basic information per each person
+                    var f_name = $('td', this).eq(0).text();
+                    var l_name = $('td', this).eq(1).text();
+                    var db = Date.parse($('td', this).eq(2).text());
+                    var status = $('td', this).eq(3).text();
+                    var phone = $('td', this).eq(4).text();
+                    var doctor = $('td', this).eq(5).text(); 
+                    var nurse = $('td', this).eq(6).text(); 
+                    var inst = $('td', this).eq(7).text();
+                    var addr = $('td', this).eq(8).text();
+                    var desc = $('td', this).eq(9).text(); 
+      
+                    //insurance info
+                    var insr_plan = $('td', this).eq(10).text(); 
+                    var insr_no = $('td', this).eq(11).text(); 
+                    var insr_provider = $('td', this).eq(12).text(); 
+      
+                    document.getElementById("first_name").value = f_name;
+                    document.getElementById("last_name").value = l_name;
+
+                    //convert ehd date
+                    var d1 = new Date(db)
+                    date = d1.getDate()
+                    if (date < 10){
+                     date = '0' + date;
+                    }
+                    year = d1.getFullYear();
+                    month = d1.getMonth();
+                    if (month < 10) {
+                     month = '0' + month;
+                    }
+                    document.getElementById("p_birth").value = year + '-' +month+'-'+date;
+
+
+                    document.getElementById("p_tel").value = phone;
+                    document.getElementById("p_status").value = status;
+                    $("#p_doc").val(doctor);
+                    $("#p_nurse").val(nurse);
+                    $("#p_inst").val(inst);
+                    document.getElementById("p_address").value = addr;
+                    document.getElementById("p_des").value = desc;
+      
+                    document.getElementById("insr_name").value = insr_plan;
+                    document.getElementById("insr_num").value = insr_no;
+                    document.getElementById("insr_provider").value = insr_provider;
+      
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }
+                    else {
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
+                } );
+            //delete patient button
+            $('#button').click( function () {
+                var a = table.row('.selected').data();
+                first = a[0];
+                last = a[1];
+                delete_patient(first, last);
+                table.row('.selected').remove().draw( false );
+            });
+
+            $('#clearbutton').click( function() {
+               document.getElementById('editableForm').reset();
+            });
+      
+            //Doctor Nav Bar
+            $('.doctorNav').click( function () {
+               document.getElementById("searchDoctor").value = ($(this)).text().trim();
+               table.column(5).search(($(this).text().trim())).draw();
+            });
+            $('#doctorNavAll').click(function() {
+               document.getElementById("searchDoctor").value = "";
+               table.column(5).search("").draw();
+            });
+            //When a nurse is clicked upon in the nav bar, load the data to search
+            $('.nurseNav').click( function () {
+                document.getElementById("searchNurse").value = ($(this)).text().trim();
+                table.column(6).search(($(this).text().trim())).draw();
+            });
+            $('#nurseNavAll').click(function() {
+               document.getElementById("searchNurse").value = "";
+               table.column(6).search("").draw();
+            });
+      
+            //filter by institution when clicked upon
+            $('.instNav').click( function () {
+                document.getElementById("searchInstitution").value = ($(this)).text().trim();
+                table.column(7).search(($(this).text().trim())).draw();
+            });
+            $('#instNavAll').click(function() {
+               document.getElementById("searchInstitution").value = "";
+               table.column(7).search("").draw();
+            });
+            //add a new patient when the button is clicked
+            $( "#addPatient" ).click(function() {
+              add_patient();
+            });
+            //used to generate a report
+            $( "#generateReport" ).click(function() { 
+              generate_report();
+            });
+      
+         //
+         $('#myTable tfoot th').each( function () {
+                var title = $('#myTable thead th').eq( $(this).index() ).text();
+                $(this).html('<input id = "search'+title+'" type="text" placeholder="Search '+title+'" />');
+            } );
+            // DataTable
+            // Apply the search
+            table.columns().eq(0).each( function ( colIdx ) {
+                $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
+                    table
+                        .column( colIdx )
+                        .search( this.value )
+                        .draw();
+                } );
+            } );
+        });
+      
+        //function to add a new patient when the button is clicked 
+        function add_patient() {
+            //ajax request the information on the html page 
+            $.ajax({
+                url : "create_patient/", // the endpoint
+                type : "POST", // http method
+                data : { 
+                  'csrfmiddlewaretoken': '{{csrf_token}}',
+                  f_name : document.getElementById("first_name").value,
+                  l_name : document.getElementById("last_name").value, 
+                  phone : document.getElementById("p_tel").value,
+                  status : document.getElementById("p_status").value,
+                  p_doc : $("#p_doc").val(),
+                  p_nurse : $("#p_nurse").val(),
+                  p_inst : $("#p_inst").val(),
+                  p_addr: $("#p_address").val(),
+                  p_desc : document.getElementById("p_des").value,
+                  p_insr_name: $("#insr_name").val(),
+                  p_insr_no: $("#insr_num").val(),
+                  p_insr_provider: $("#insr_provider").val(),
+                  the_post : $('#test').text()}, // data sent with the post request
+                // handle a successful response
+                success : function(json) {
+                    $('#post-text').text(''); // remove the value from the input
+                },  
+      
+                // handle a non-successful response
+                error : function(xhr,errmsg,err) {
+                    $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                        " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+            });
+        };
+      
+        //function to delete a patient given first and last name
+        function delete_patient(first, last) {
+            //ajax request to post first name and last name to delete them
+            $.ajax({
+                url : "delete_patient/", // the endpoint
+                type : "POST", // http method
+                data : { 
+                  'csrfmiddlewaretoken': '{{csrf_token}}',
+                  f_name : first,
+                  l_name : last}, 
+                // handle a successful response
+                success : function(json) {
+                    console.log(json); // log the returned json to the console
+                    console.log("success"); // another sanity check
+                },  
+      
+                // handle a non-successful response
+                error : function(xhr,errmsg,err) {
+                    $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                        " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+            });
+        };
+      
+        //function to generate a report
+        function generate_report() {
+          console.log('entered generate report')
+            $.ajax({
+                url : "generate_report/", // the endpoint
+                type : "POST", // http method
+                data : { 
+                  'csrfmiddlewaretoken': '{{csrf_token}}'}, // data sent with the post request
+                // handle a successful response
+                success : function(data) {
+                    console.log()
+                    //doc.print();
+                },  
+                // handle a non-successful response
+                error : function(xhr,errmsg,err) {
+                    $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                        " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+            });
+        };
+   </script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+   <script src="{{ STATIC_URL }}dist/js/bootstrap.min.js"></script>
+   </body>
+</html>

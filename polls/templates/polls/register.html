@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>IndeMed Register Page</title>
+
+    <link href="{{ STATIC_URL }}dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}custom.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}dist/js/jquery-1.11.2.min.js"></script>
+  </head>
+  <body>
+  <div id="header"> </div>
+  <div class="container" log-in id='log'>
+        <!-- Form for registering a new practice --> 
+        <form class="form-signin"> {% csrf_token %}
+          <p class="form-signin-heading" class="text-cent" style="font-size:large; text-align:left">If you have an account, please sign in here. Otherwise, sign up here.</p>
+
+          <label for="firstName" class="sr-only">First Name</label>
+          <input type="text" id="firstName" class="form-control" placeholder="First Name" required="" autofocus="" style="width:60%; float:left; position:relative; z-index: 7;" >
+
+          <label for="lastName" class="sr-only">Last Name</label>
+          <input type="text" id="lastName" class="form-control" placeholder="Last Name" required="" autofocus="" style="width:60%; float:left; position:relative; z-index: 6;">
+
+          <label for="practiceName" class="sr-only">Practice Name</label>
+          <input type="text" id="practiceName" class="form-control" placeholder="Name of Practice" required="" autofocus="" style="width:60%; float:left; position:relative; z-index: 5;">
+
+          <label for="inputEmail" class="sr-only">Email address</label>
+          <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" style="width:60%; float:left; position:relative; z-index: 4;">
+
+          <label for="address" class="sr-only">Address</label>
+          <input type="text" id="address" class="form-control" placeholder="Address" required="" autofocus="" style="width:60%; float:left; position:relative; z-index: 3;">
+
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" style="width:60%; float:left; position:relative; z-index: 2;">
+
+          <div class="checkbox" class="sr-only" style="float:left; width:60%; position:relative; z-index: 1;">
+            <label>
+              <input type="checkbox" value="remember-me" style="float:left"> Remember me 
+            </label>
+          </div>
+          <div style="width:60%; position:relative; z-index:0; text-align:center; float:center">
+            <button id = 'registerPractice' class="btn btn-lg btn-primary btn-block" style="width:60%; float:center; position:relative;" type="submit">Register Practice</button>
+            <!-- Error message displays should register not work --> 
+            <p id = 'error' style="color:red; float:left;"> Error with creating a practice. It already exists or you used an invalid combination. Please try again. </p>
+          </div>
+        </form> 
+  </div>
+    <div id="footer"> </div>
+    <script>
+    $("#header").load('polls/templates/header.html');
+    $("#footer").load('polls/templates/footer.html');
+    $('#error').hide()
+    jQuery(document).ready(function($) {
+      $('#registerPractice').on( 'click', function (e) {
+        e.preventDefault();
+        registerNewPractice();
+        });
+    });
+
+    //register a new practice with the given information    
+    function registerNewPractice(){
+      console.log('entered new practice registration')
+        var fn = document.getElementById("firstName").value
+        var ln = document.getElementById("lastName").value 
+        var practiceName = document.getElementById("practiceName").value
+        var email = document.getElementById("inputEmail").value
+        var address = document.getElementById("address").value
+        var passw = document.getElementById("inputPassword").value 
+        // hash the password ***
+
+        //ajax post to create a new practice 
+        $.ajax({
+                url : "create_practice/", // the endpoint
+                type : "POST", // http methods
+                data : { 
+                    'csrfmiddlewaretoken': '{{csrf_token}}',
+                    first: fn,
+                    last: ln,
+                    practice: practiceName,
+                    email: email,
+                    address: address,
+                    passw: passw},
+                // handle a successful response
+                success : function(json) {
+                        //**** fix this
+                        if (json['log'] == 'valid') {
+                          location.href = 'manage';
+                        } else if (json['log'] == 'invalid') {
+                          document.getElementById("firstName").value = ''
+                          document.getElementById("lastName").value = ''
+                          document.getElementById("practiceName").value = ''
+                          document.getElementById("inputEmail").value = ''
+                          document.getElementById("address").value = ''
+                          document.getElementById("inputPassword").value  = ''
+                          $('#error').show();
+                        }
+                },  
+
+                // handle a non-successful response
+                error : function(xhr,errmsg,err) {
+                        $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+            });
+    };
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

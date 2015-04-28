@@ -1,7 +1,6 @@
 from django.shortcuts import render
 import datetime
 import json
-from reportlab.pdfgen import canvas
 import hashlib
 # Create your views here.
 

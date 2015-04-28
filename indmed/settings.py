@@ -95,6 +95,11 @@ USE_TZ = True
 STATIC_URL = 'polls/static/'
 STATIC_ROOT = "statics/"
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES['default'] =  dj_database_url.config()
